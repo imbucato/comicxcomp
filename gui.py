@@ -13,6 +13,16 @@ def select_output_file():
     output_file_entry.delete(0, tk.END)
     output_file_entry.insert(0, file_selected)
 
+#Deginisce una funzione per stampare i messaggi di stato all'interno del box output_message
+def print_status(message):
+    output_message.insert(tk.END, message + "\n")
+    output_message.xview_moveto(1.0)
+
+# Definisce la funzione che avvia la compressione
+def avvia_compressione():
+    print_status('uno')
+    print_status('due')
+
 #root.title("undefined")
 width=592
 height=424
@@ -92,7 +102,8 @@ radio3 = tk.Radiobutton(window, variable=radio_var, value=3)
 radio3.place(x=520,y=170,width=85,height=25)
 
 # Crea il widget per il pulsante di conferma
-confirm_button = tk.Button(window, text="AVVIA", command=window.quit)
+#confirm_button = tk.Button(window, text="AVVIA", command=window.quit)
+confirm_button = tk.Button(window, text="AVVIA", command=avvia_compressione)
 confirm_button.place(x=250,y=220,width=110,height=30)
 
 # Avvia il loop principale della GUI

@@ -19,6 +19,8 @@ def print_status(message):
     output_message.insert(tk.END, message + "\n")
     output_message.xview_moveto(1.0)
     output_message.configure(state='disabled')          #disabilita temporanemente la modifica del widget TEXT
+    output_message.see("end")
+    
 
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():
@@ -114,7 +116,14 @@ confirm_button.place(x=250,y=220,width=110,height=30)
 
 # Crea il widget text per la stampa dei messaggi di stato
 output_message = tk.Text(window)
+
+scrollbar = tk.Scrollbar(window)
+scrollbar.config(command=output_message.yview)
+
+output_message.config(yscrollcommand=scrollbar.set)
+
 output_message.place(x=30,y=270,width=530,height=131)
+scrollbar.place(x=550,y=270,width=20,height=131)
 output_message.configure(state='disabled')
 
 

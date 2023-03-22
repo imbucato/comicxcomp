@@ -15,13 +15,22 @@ def select_output_file():
 
 #Deginisce una funzione per stampare i messaggi di stato all'interno del box output_message
 def print_status(message):
+    output_message.configure(state='normal')            #abilita temporanemente la modifica del widget TEXT
     output_message.insert(tk.END, message + "\n")
     output_message.xview_moveto(1.0)
+    output_message.configure(state='disabled')          #disabilita temporanemente la modifica del widget TEXT
 
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():
-    print_status('uno')
-    print_status('due')
+    print_status(input_file_entry.get())
+    print_status(output_file_entry.get())
+    print_status(long_side_entry.get())
+    print_status(dpi_entry.get())
+    print_status(jpg_comp_entry.get())
+    print_status(radio_var.get())
+    
+    
+
 
 #root.title("undefined")
 width=592
@@ -70,6 +79,7 @@ jpg_comp_label.place(x=250,y=140,width=140,height=30)
 jpg_comp_entry = tk.Entry(window)
 jpg_comp_entry.place(x=280,y=170,width=70,height=30)
 
+# Crea i widget per la selezione delle radiobox colore/scala di grigi/bw
 GLabel_183=tk.Label(window)
 GLabel_183["justify"] = "center"
 GLabel_183["text"] = "Colore"
@@ -85,26 +95,29 @@ GLabel_417["justify"] = "center"
 GLabel_417["text"] = "B/W"
 GLabel_417.place(x=530,y=140,width=70,height=30)
 
-output_message = tk.Entry(window)
-output_message.place(x=30,y=270,width=530,height=131)
-output_message.configure(state='disabled')
-print(output_message.cget('state'))
+radio_var = tk.StringVar()
+radio_colori = tk.Radiobutton(window, variable=radio_var, value='colori')
+radio_colori.place(x=380,y=170,width=85,height=25)
 
-# Crea i widget per la selezione delle radiobox
-radio_var = tk.IntVar()
-radio1 = tk.Radiobutton(window, variable=radio_var, value=1)
-radio1.place(x=380,y=170,width=85,height=25)
+radio_grigi = tk.Radiobutton(window, variable=radio_var, value='grigi')
+radio_grigi.place(x=450,y=170,width=85,height=25)
 
-radio2 = tk.Radiobutton(window, variable=radio_var, value=2)
-radio2.place(x=450,y=170,width=85,height=25)
+radio_bn = tk.Radiobutton(window, variable=radio_var, value='bianco e nero')
+radio_bn.place(x=520,y=170,width=85,height=25)
 
-radio3 = tk.Radiobutton(window, variable=radio_var, value=3)
-radio3.place(x=520,y=170,width=85,height=25)
+radio_var.set('colori')     #imposto colori come valore di default
 
 # Crea il widget per il pulsante di conferma
 #confirm_button = tk.Button(window, text="AVVIA", command=window.quit)
 confirm_button = tk.Button(window, text="AVVIA", command=avvia_compressione)
 confirm_button.place(x=250,y=220,width=110,height=30)
+
+# Crea il widget text per la stampa dei messaggi di stato
+output_message = tk.Text(window)
+output_message.place(x=30,y=270,width=530,height=131)
+output_message.configure(state='disabled')
+
+
 
 # Avvia il loop principale della GUI
 window.mainloop()

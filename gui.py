@@ -20,8 +20,7 @@ def print_status(message):
     output_message.xview_moveto(1.0)
     output_message.configure(state='disabled')          #disabilita temporanemente la modifica del widget TEXT
     output_message.see("end")
-    
-
+  
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():
     print_status(input_file_entry.get())
@@ -32,9 +31,8 @@ def avvia_compressione():
     print_status(radio_var.get())
     
     
-
-
-#root.title("undefined")
+#############################################################################################
+##############          CREAZIOZIONE DELL'INTERFACCIA GRAFICA   #############################
 width=592
 height=424
 

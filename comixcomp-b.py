@@ -100,24 +100,17 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
 
 # Definisce una funzione per la selezione del file di input
 def select_input_file():
-    file_selected = filedialog.askopenfilename(filetypes=[("cbz file", ".cbz"),("cbr file", ".cbr")])
+    file_selected = filedialog.askdirectory()
     input_file_entry.delete(0, tk.END)
     input_file_entry.insert(0, file_selected)
 
 # Definisce una funzione per la selezione del file di output
 def select_output_file():
-    file_selected = filedialog.asksaveasfilename(filetypes=[("cbz file", ".cbz")], defaultextension=".cbz")
+    file_selected = filedialog.askdirectory()
     output_file_entry.delete(0, tk.END)
     output_file_entry.insert(0, file_selected)
 
 #Deginisce una funzione per stampare i messaggi di stato all'interno del box output_message
-# def print_status(message):
-#     output_message.configure(state='normal')            #abilita temporanemente la modifica del widget TEXT
-#     output_message.insert(tk.END, message + "\n")
-#     output_message.xview_moveto(1.0)
-#     output_message.configure(state='disabled')          #disabilita temporanemente la modifica del widget TEXT
-#     output_message.see("end")
-
 def print_status(message):
     output_message.configure(state='normal') 
     output_message.insert(tk.END, message + "\n")
@@ -128,18 +121,32 @@ def print_status(message):
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():
      
-    input_file = input_file_entry.get()
-    output_file = output_file_entry.get()
+    input_dir = input_file_entry.get()
+    output_dir = output_file_entry.get()
     max_size = int(long_side_entry.get())
     dpi = int(dpi_entry.get())
     jpg_quality = int(jpg_comp_entry.get())
     color_bits = radio_var.get()
 
-    compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+    print_status('*******INIZIO PROCESSO COMPRESSIONE BATCH*******')
+
+    for file in os.listdir(input_dir):
+        if file.endswith('.cbr') or file.endswith('.cbz'):
+            
+            input_file = os.path.join(input_dir, file)
+            nome_file_senza_estensione = os.path.splitext(os.path.basename(input_file))[0]
+            output_file = os.path.join(output_dir, nome_file_senza_estensione + '.cbz')
+            print_status('ELABORAZIONE ' + input_file)
+            compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+
+    print_status('*******FINE PROCESSO COMPRESSIONE BATCH*******')  
+
+ 
+    
 
 #root.title("undefined")
 width=592
-height=424
+height=624
 
 #setting window size
 window = tk.Tk()
@@ -152,16 +159,16 @@ screenheight = window.winfo_screenheight()
 alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
 window.geometry(alignstr)
 
-# Crea i widget per la selezione del file di input
-input_file_label = tk.Label(window, text="Seleziona il file cbr/cbz da comprimere")
+# Crea i widget per la selezione della directory di input
+input_file_label = tk.Label(window, text="Seleziona la directory che contiene i cbr/cbz")
 input_file_label.place(x=10,y=0,height=30)
 input_file_entry = tk.Entry(window)
 input_file_entry.place(x=10,y=30,width=486,height=30)
 input_file_button = tk.Button(window, text="Sfoglia", command=select_input_file)
 input_file_button.place(x=510,y=30,width=70,height=30)
 
-# Crea i widget per la selezione del file di output
-output_file_label = tk.Label(window, text="Scegli il nome del file cbz compresso")
+# Crea i widget per la selezione della directory di output
+output_file_label = tk.Label(window, text="Seleziona la directory dove salvare i cbz compressi")
 output_file_label.place(x=10,y=70,height=30)
 output_file_entry = tk.Entry(window)
 output_file_entry.place(x=10,y=100,width=487,height=30)
@@ -225,8 +232,8 @@ scrollbar.config(command=output_message.yview)
 
 output_message.config(yscrollcommand=scrollbar.set)
 
-output_message.place(x=30,y=270,width=530,height=131)
-scrollbar.place(x=550,y=270,width=20,height=131)
+output_message.place(x=30,y=270,width=530,height=331)
+scrollbar.place(x=550,y=270,width=20,height=331)
 output_message.configure(state='disabled')
 
 

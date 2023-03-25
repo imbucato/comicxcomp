@@ -8,29 +8,70 @@ import zipfile
 import tempfile
 import shutil
 
+#Definisco il percorso dell'eseguibile unrar.exe indispensabile per il funziomanento del modulo python 'rarfile'
 rarfile.UNRAR_TOOL = r'UnRAR.exe'
 
+#Funzione per riconoscere se un file è un archivio ZIP indipendemente dall'estensione
+def is_zip_file(filename):
+    try:
+        with zipfile.ZipFile(filename) as zip_file:
+            return True
+    except zipfile.BadZipFile:
+        return False
+
+#Funzione per riconoscere se un file è un archivio RAR indipendemente dall'estensione
+def is_rar_file(filename):
+    try:
+        with rarfile.RarFile(filename) as rar_file:
+            return True
+    except rarfile.NotRarFile:
+        return False
+
+#FUNZIONE PRINCIPALE PER LA COMPRESSIONE DEI CBR/CBZ
 def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits):
     print_status('Inizia compressione')
 
     archive = None
     archive_type = None
-    if input_file.lower().endswith('.cbr'):
+
+    # if input_file.lower().endswith('.cbr'):
+    #     archive = rarfile.RarFile
+    #     archive_type = 'cbr'
+    #     print_status('Archivio di tipo RAR')
+    # elif input_file.lower().endswith('.cbz'):
+    #     archive = zipfile.ZipFile
+    #     archive_type = 'cbz'
+    #     print_status('Archivio di tipo ZIP')
+    # else:
+    #     raise ValueError("Unsupported file type. Only CBR and CBZ files are supported.")
+    
+    if is_rar_file(input_file):
         archive = rarfile.RarFile
         archive_type = 'cbr'
-    elif input_file.lower().endswith('.cbz'):
+        if input_file.lower().endswith('.cbr'):
+            print_status('Archivio di tipo RAR')
+        else:
+            print_status('Il file ha estenzione cbz ma è in realtà un cbr (archivio RAR)')        
+    elif is_zip_file(input_file):
         archive = zipfile.ZipFile
         archive_type = 'cbz'
+        print_status('Archivio di tipo ZIP')
     else:
-        raise ValueError("Unsupported file type. Only CBR and CBZ files are supported.")
+        print_status('Archivio non corretto o non supportato')
+        if input_file.lower().endswith('.zip'):
+            print_status('Archivio di tipo ZIP')
+        else:
+            print_status('Il file ha estenzione cbr ma è in realtà un cbz (archivio ZIP)')  
+        return
     
     with archive(input_file, 'r') as af:
         temp_dir = tempfile.mkdtemp()
+        print_status('Scompattazione archivio')
         af.extractall(temp_dir)
         pagina = 1
         new_temp_dir = tempfile.mkdtemp()
         for root, _, files in os.walk(temp_dir):
-            
+            print_status('Modifica immagini')
             for file in files:
                 if file.lower().endswith(('.jpg', '.jpeg', '.png')):
                     image_path = os.path.join(root, file)
@@ -51,7 +92,7 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
                     
                     img.save(output_image_path, 'JPEG', dpi=(dpi, dpi), quality=jpg_quality)
                     pagina += 1
-
+        print_status('Ricreazione archivio compresso')
         if archive_type == 'cbr':
             with zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED) as out_zip:
                 for root, _, files in os.walk(new_temp_dir):
@@ -81,13 +122,19 @@ def select_output_file():
     output_file_entry.insert(0, file_selected)
 
 #Deginisce una funzione per stampare i messaggi di stato all'interno del box output_message
+# def print_status(message):
+#     output_message.configure(state='normal')            #abilita temporanemente la modifica del widget TEXT
+#     output_message.insert(tk.END, message + "\n")
+#     output_message.xview_moveto(1.0)
+#     output_message.configure(state='disabled')          #disabilita temporanemente la modifica del widget TEXT
+#     output_message.see("end")
+
 def print_status(message):
-    output_message.configure(state='normal')            #abilita temporanemente la modifica del widget TEXT
+    output_message.configure(state='normal') 
     output_message.insert(tk.END, message + "\n")
-    output_message.xview_moveto(1.0)
-    output_message.configure(state='disabled')          #disabilita temporanemente la modifica del widget TEXT
-    output_message.see("end")
-    
+    output_message.see(tk.END)
+    output_message.update()    
+    output_message.configure(state='disabled') 
 
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():

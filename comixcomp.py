@@ -34,17 +34,7 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
     archive = None
     archive_type = None
 
-    # if input_file.lower().endswith('.cbr'):
-    #     archive = rarfile.RarFile
-    #     archive_type = 'cbr'
-    #     print_status('Archivio di tipo RAR')
-    # elif input_file.lower().endswith('.cbz'):
-    #     archive = zipfile.ZipFile
-    #     archive_type = 'cbz'
-    #     print_status('Archivio di tipo ZIP')
-    # else:
-    #     raise ValueError("Unsupported file type. Only CBR and CBZ files are supported.")
-    
+    #Verifica se il file in entrata è un archivio zip o rar valido
     if is_rar_file(input_file):
         archive = rarfile.RarFile
         archive_type = 'cbr'
@@ -55,13 +45,12 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
     elif is_zip_file(input_file):
         archive = zipfile.ZipFile
         archive_type = 'cbz'
-        print_status('Archivio di tipo ZIP')
-    else:
-        print_status('Archivio non corretto o non supportato')
         if input_file.lower().endswith('.zip'):
             print_status('Archivio di tipo ZIP')
         else:
-            print_status('Il file ha estenzione cbr ma è in realtà un cbz (archivio ZIP)')  
+            print_status('Il file ha estenzione cbr ma è in realtà un cbz (archivio ZIP)')
+    else:
+        print_status('Archivio non corretto o non supportato')
         return
     
     with archive(input_file, 'r') as af:

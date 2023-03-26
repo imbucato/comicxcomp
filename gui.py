@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 
 # Definisce una funzione per la selezione del file di input
 def select_input_file():
@@ -71,7 +72,13 @@ long_side_entry.place(x=30,y=170,width=92,height=30)
 
 dpi_label = tk.Label(window, text="DPI")
 dpi_label.place(x=170,y=140,width=70,height=30)
-dpi_entry = tk.Entry(window)
+
+options = [72, 96, 120,150,200,220,300,400,600]
+
+# Variabile per memorizzare il valore selezionato dall'elenco a discesa
+selected_value = tk.StringVar()
+
+dpi_entry = ttk.Combobox(window,textvariable=selected_value, values=options)
 dpi_entry.place(x=170,y=170,width=70,height=30)
 
 jpg_comp_label = tk.Label(window, text="Compressione JPEG")

@@ -1,7 +1,7 @@
 import os
 import sys
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 from PIL import Image
 import rarfile
 import zipfile
@@ -114,14 +114,6 @@ def select_output_file():
     output_file_entry.delete(0, tk.END)
     output_file_entry.insert(0, file_selected)
 
-#Deginisce una funzione per stampare i messaggi di stato all'interno del box output_message
-# def print_status(message):
-#     output_message.configure(state='normal')            #abilita temporanemente la modifica del widget TEXT
-#     output_message.insert(tk.END, message + "\n")
-#     output_message.xview_moveto(1.0)
-#     output_message.configure(state='disabled')          #disabilita temporanemente la modifica del widget TEXT
-#     output_message.see("end")
-
 def print_status(message):
     output_message.configure(state='normal') 
     output_message.insert(tk.END, message + "\n")
@@ -176,16 +168,24 @@ output_file_button.place(x=510,y=100,width=70,height=30)
 long_side_label = tk.Label(window, text="Dimensione lato lungo")
 long_side_label.place(x=0,y=140,width=151,height=30)
 long_side_entry = tk.Entry(window)
+long_side_entry["justify"] = "center"
 long_side_entry.place(x=30,y=170,width=92,height=30)
 
 dpi_label = tk.Label(window, text="DPI")
 dpi_label.place(x=170,y=140,width=70,height=30)
-dpi_entry = tk.Entry(window)
+
+#Variabile per memorizzare il valore selezionato dall'elenco a discesa
+selected_value = tk.StringVar()
+options = [72, 96, 120, 150, 200, 220, 300, 400, 600]
+selected_value.set(options[0])
+dpi_entry = ttk.Combobox(window,textvariable=selected_value, values=options)
+dpi_entry["justify"] = "center"
 dpi_entry.place(x=170,y=170,width=70,height=30)
 
 jpg_comp_label = tk.Label(window, text="Compressione JPEG")
 jpg_comp_label.place(x=250,y=140,width=140,height=30)
 jpg_comp_entry = tk.Entry(window)
+jpg_comp_entry["justify"] = "center"
 jpg_comp_entry.place(x=280,y=170,width=70,height=30)
 
 # Crea i widget per la selezione delle radiobox colore/scala di grigi/bw

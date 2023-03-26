@@ -64,7 +64,11 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
             for file in files:
                 if file.lower().endswith(('.jpg', '.jpeg', '.png')):
                     image_path = os.path.join(root, file)
-                    output_image_path = os.path.join(new_temp_dir, file)
+                    
+                    nome_immagine_senza_estensione = os.path.splitext(os.path.basename(image_path))[0]
+
+                    output_image_path_jpg = os.path.join(new_temp_dir, nome_immagine_senza_estensione + '.jpg')
+                    output_image_path_png = os.path.join(new_temp_dir, nome_immagine_senza_estensione + '.png')
 
                     img = Image.open(image_path)
 
@@ -73,26 +77,25 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
                         new_size = tuple(int(x * scale_factor) for x in img.size)
                         img = img.resize(new_size, Image.LANCZOS)
 
-                    if color_bits=='grigi' and 2 < pagina < len(files) - 1:
+                    if color_bits=='grigi' and 2 < pagina < len(files) - 1 and img.mode != '1':
                         img = img.convert("L");
-                    elif color_bits=='bn' and 2 < pagina < len(files) - 1:
+                    elif color_bits=='bn' and 2 < pagina < len(files) - 1 and img.mode != '1':
                         img = img.convert("L");
                         img = img.convert("1");
                     
-                    img.save(output_image_path, 'JPEG', dpi=(dpi, dpi), quality=jpg_quality)
+                    if img.mode == '1':
+                        img.save(output_image_path_png, format="PNG", dpi=(dpi, dpi), compress_level=6) 
+                    else:
+                        img.save(output_image_path_jpg, 'JPEG', dpi=(dpi, dpi), quality=jpg_quality)          
+                    
                     pagina += 1
+        
         print_status('Ricreazione archivio compresso')
-        if archive_type == 'cbr':
-            with zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED) as out_zip:
-                for root, _, files in os.walk(new_temp_dir):
-                    for file in files:
-                        out_zip.write(os.path.join(root, file), arcname=file)
-        elif archive_type == 'cbz':
-            with zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED) as out_zip:
-                for root, _, files in os.walk(new_temp_dir):
-                    for file in files:
-                        out_zip.write(os.path.join(root, file), arcname=file)
-
+        with zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED) as out_zip:
+            for root, _, files in os.walk(new_temp_dir):
+                for file in files:
+                    out_zip.write(os.path.join(root, file), arcname=file)
+    
         shutil.rmtree(temp_dir)
         shutil.rmtree(new_temp_dir)
 

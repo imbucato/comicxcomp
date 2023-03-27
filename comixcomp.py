@@ -105,14 +105,18 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
 # Definisce una funzione per la selezione del file di input
 def select_input_file():
     file_selected = filedialog.askopenfilename(filetypes=[("cbz file", ".cbz"),("cbr file", ".cbr")])
+    input_file_entry.configure(state='normal') 
     input_file_entry.delete(0, tk.END)
     input_file_entry.insert(0, file_selected)
+    input_file_entry.configure(state='disabled') 
 
 # Definisce una funzione per la selezione del file di output
 def select_output_file():
     file_selected = filedialog.asksaveasfilename(filetypes=[("cbz file", ".cbz")], defaultextension=".cbz")
+    output_file_entry.configure(state='normal') 
     output_file_entry.delete(0, tk.END)
     output_file_entry.insert(0, file_selected)
+    output_file_entry.configure(state='disabled') 
 
 def print_status(message):
     output_message.configure(state='normal') 
@@ -123,15 +127,34 @@ def print_status(message):
 
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():
-     
-    input_file = input_file_entry.get()
-    output_file = output_file_entry.get()
-    max_size = int(long_side_entry.get())
-    dpi = int(dpi_entry.get())
-    jpg_quality = int(jpg_comp_entry.get())
-    color_bits = radio_var.get()
+    
+    avvia = True
 
-    compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+    #Verifica generale parametri di ingresso
+    try:
+        input_file = input_file_entry.get()
+        output_file = output_file_entry.get()
+        max_size = int(long_side_entry.get())
+        dpi = int(dpi_entry.get())
+        jpg_quality = (compressione_jpg.get())
+        color_bits = radio_var.get()
+        
+    except:
+        print_status('C\'è qualcosa che non va nei parametri di ingresso.')
+        avvia = False
+
+    #Verifica se il file di input esiste
+    if not os.path.isfile(input_file):
+        print_status("Il file di ingresso non sembra esistere!")
+        avvia = False
+
+    #Verifica se la directory di output esiste
+    if not os.path.exists(os.path.dirname(output_file)):
+        print_status("La directory di salvataggio del file cbz non sembra esistere!")
+        avvia = False
+
+    #Se è tutto ok avvia la compressione
+    if avvia : compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
 
 #root.title("undefined")
 width=592
@@ -152,6 +175,7 @@ window.geometry(alignstr)
 input_file_label = tk.Label(window, text="Seleziona il file cbr/cbz da comprimere")
 input_file_label.place(x=10,y=0,height=30)
 input_file_entry = tk.Entry(window)
+input_file_entry.configure(state='disabled')
 input_file_entry.place(x=10,y=30,width=486,height=30)
 input_file_button = tk.Button(window, text="Sfoglia", command=select_input_file)
 input_file_button.place(x=510,y=30,width=70,height=30)
@@ -160,14 +184,24 @@ input_file_button.place(x=510,y=30,width=70,height=30)
 output_file_label = tk.Label(window, text="Scegli il nome del file cbz compresso")
 output_file_label.place(x=10,y=70,height=30)
 output_file_entry = tk.Entry(window)
+output_file_entry.configure(state='disabled')
 output_file_entry.place(x=10,y=100,width=487,height=30)
 output_file_button = tk.Button(window, text="Sfoglia", command=select_output_file)
 output_file_button.place(x=510,y=100,width=70,height=30)
 
+#Funzione di validazione del campo "long_side_entry": impedisce che vengano inserite lettere
+def validate_input(new_value):
+    if new_value.isnumeric() or new_value == "":
+        return True
+    else:
+        return False
+
+vcmd = (window.register(validate_input), '%P')
+
 # Crea i widget per l'inserimento dei parametri di compressione
 long_side_label = tk.Label(window, text="Dimensione lato lungo")
 long_side_label.place(x=0,y=140,width=151,height=30)
-long_side_entry = tk.Entry(window)
+long_side_entry = tk.Entry(window,validate="key", validatecommand=vcmd)
 long_side_entry["justify"] = "center"
 long_side_entry.place(x=30,y=170,width=92,height=30)
 
@@ -184,9 +218,14 @@ dpi_entry.place(x=170,y=170,width=70,height=30)
 
 jpg_comp_label = tk.Label(window, text="Compressione JPEG")
 jpg_comp_label.place(x=250,y=140,width=140,height=30)
-jpg_comp_entry = tk.Entry(window)
-jpg_comp_entry["justify"] = "center"
-jpg_comp_entry.place(x=280,y=170,width=70,height=30)
+
+compressione_jpg = tk.IntVar(value=85)
+jpg_comp_entry = tk.Scale(window, from_=1, to=100, orient=tk.HORIZONTAL, variable=compressione_jpg)
+jpg_comp_entry.place(x=260,y=160,width=120)
+
+#jpg_comp_entry = tk.Entry(window)
+#jpg_comp_entry["justify"] = "center"
+#jpg_comp_entry.place(x=280,y=170,width=70,height=30)
 
 # Crea i widget per la selezione delle radiobox colore/scala di grigi/bw
 GLabel_183=tk.Label(window)

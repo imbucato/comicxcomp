@@ -104,14 +104,18 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
 # Definisce una funzione per la selezione del file di input
 def select_input_file():
     file_selected = filedialog.askdirectory()
+    input_file_entry.configure(state='normal')
     input_file_entry.delete(0, tk.END)
     input_file_entry.insert(0, file_selected)
+    input_file_entry.configure(state='disabled')
 
 # Definisce una funzione per la selezione del file di output
 def select_output_file():
     file_selected = filedialog.askdirectory()
+    output_file_entry.configure(state='normal')
     output_file_entry.delete(0, tk.END)
     output_file_entry.insert(0, file_selected)
+    output_file_entry.configure(state='disabled')
 
 #Deginisce una funzione per stampare i messaggi di stato all'interno del box output_message
 def print_status(message):
@@ -128,7 +132,7 @@ def avvia_compressione():
     output_dir = output_file_entry.get()
     max_size = int(long_side_entry.get())
     dpi = int(dpi_entry.get())
-    jpg_quality = int(jpg_comp_entry.get())
+    jpg_quality = compressione_jpg.get()
     color_bits = radio_var.get()
 
     print_status('*******INIZIO PROCESSO COMPRESSIONE BATCH*******')
@@ -162,18 +166,20 @@ screenheight = window.winfo_screenheight()
 alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
 window.geometry(alignstr)
 
-# Crea i widget per la selezione della directory di input
-input_file_label = tk.Label(window, text="Seleziona la directory che contiene i cbr/cbz")
+# Crea i widget per la selezione del file di input
+input_file_label = tk.Label(window, text="Seleziona la directory contenente i cbr/cbz da comprimere")
 input_file_label.place(x=10,y=0,height=30)
 input_file_entry = tk.Entry(window)
+input_file_entry.configure(state='disabled')
 input_file_entry.place(x=10,y=30,width=486,height=30)
 input_file_button = tk.Button(window, text="Sfoglia", command=select_input_file)
 input_file_button.place(x=510,y=30,width=70,height=30)
 
-# Crea i widget per la selezione della directory di output
-output_file_label = tk.Label(window, text="Seleziona la directory dove salvare i cbz compressi")
+# Crea i widget per la selezione del file di output
+output_file_label = tk.Label(window, text="Scegli la directory dove salvare i cbz compressi")
 output_file_label.place(x=10,y=70,height=30)
 output_file_entry = tk.Entry(window)
+output_file_entry.configure(state='disabled')
 output_file_entry.place(x=10,y=100,width=487,height=30)
 output_file_button = tk.Button(window, text="Sfoglia", command=select_output_file)
 output_file_button.place(x=510,y=100,width=70,height=30)
@@ -199,8 +205,14 @@ dpi_entry.place(x=170,y=170,width=70,height=30)
 jpg_comp_label = tk.Label(window, text="Compressione JPEG")
 jpg_comp_label.place(x=250,y=140,width=140,height=30)
 jpg_comp_entry = tk.Entry(window)
-jpg_comp_entry["justify"] = "center"
-jpg_comp_entry.place(x=280,y=170,width=70,height=30)
+
+compressione_jpg = tk.IntVar(value=85)
+jpg_comp_entry = tk.Scale(window, from_=1, to=100, orient=tk.HORIZONTAL, variable=compressione_jpg)
+jpg_comp_entry.place(x=260,y=160,width=120)
+
+#jpg_comp_entry = tk.Entry(window)
+#jpg_comp_entry["justify"] = "center"
+#jpg_comp_entry.place(x=280,y=170,width=70,height=30)
 
 # Crea i widget per la selezione delle radiobox colore/scala di grigi/bw
 GLabel_183=tk.Label(window)
@@ -231,7 +243,6 @@ radio_bn.place(x=520,y=170,width=85,height=25)
 radio_var.set('colori')     #imposto colori come valore di default
 
 # Crea il widget per il pulsante di conferma
-#confirm_button = tk.Button(window, text="AVVIA", command=window.quit)
 confirm_button = tk.Button(window, text="AVVIA", command=avvia_compressione)
 confirm_button.place(x=250,y=220,width=110,height=30)
 

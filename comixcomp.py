@@ -83,9 +83,10 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
                         img = img.convert("L");
                         img = img.convert("1");
                     
-                    if img.mode == '1':
+                    if img.mode == '1' or img.mode == 'P':
                         img.save(output_image_path_png, format="PNG", dpi=(dpi, dpi), compress_level=6) 
                     else:
+                        if img.mode == "RGBA" : img=img.convert("RGB")
                         img.save(output_image_path_jpg, 'JPEG', dpi=(dpi, dpi), quality=jpg_quality)          
                     
                     pagina += 1
@@ -163,10 +164,10 @@ def avvia_compressione():
 
 
     #Se è tutto ok avvia la compressione
-    try:
-        if avvia : compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
-    except:
-        print_status("SI E' VERIFICATO UN ERRORE DURANTE LA CONVERSIONE")
+    #try:
+    if avvia : compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+    #except:
+        #print_status("SI E' VERIFICATO UN ERRORE DURANTE LA CONVERSIONE")
 
 #root.title("undefined")
 width=592

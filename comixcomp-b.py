@@ -30,6 +30,10 @@ def is_rar_file(filename):
 #FUNZIONE PRINCIPALE PER LA COMPRESSIONE DEI CBR/CBZ
 def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits):
     
+    if cancella_compressione:
+        print_status("Compressione annullata")
+        return
+
     archive = None
     archive_type = None
 
@@ -82,9 +86,10 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
                         img = img.convert("L");
                         img = img.convert("1");
                     
-                    if img.mode == '1':
+                    if img.mode == '1' or img.mode == 'P':
                         img.save(output_image_path_png, format="PNG", dpi=(dpi, dpi), compress_level=6) 
                     else:
+                        if img.mode == "RGBA" : img=img.convert("RGB")
                         img.save(output_image_path_jpg, 'JPEG', dpi=(dpi, dpi), quality=jpg_quality)          
                     
                     pagina += 1
@@ -124,9 +129,16 @@ def print_status(message):
     output_message.update()    
     output_message.configure(state='disabled') 
 
+# Definisce la funzione che interrompe il processo batch
+def annulla_compressione():
+    global cancella_compressione
+    cancella_compressione = True 
+
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():
-
+    global cancella_compressione
+    
+    cancella_compressione = False
     avvia = True
 
     input_dir = input_file_entry.get()
@@ -172,16 +184,14 @@ def avvia_compressione():
                 output_file = os.path.join(output_dir, nome_file_senza_estensione + '.cbz')
                 print_status('\nELABORAZIONE ' + input_file)
                 
-                try:
-                    compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
-                except:
-                    print_status('Si è verficato un errore imprevisto durante la compressione')
+                compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+                
+                #    print_status('Si è verficato un errore imprevisto durante la compressione')
 
 
-        print_status('*******FINE PROCESSO COMPRESSIONE BATCH*******')  
+        print_status('\n*******FINE PROCESSO COMPRESSIONE BATCH*******')  
 
- 
-    
+   
 
 #root.title("undefined")
 width=592
@@ -282,6 +292,11 @@ radio_var.set('colori')     #imposto colori come valore di default
 # Crea il widget per il pulsante di conferma
 confirm_button = tk.Button(window, text="AVVIA", command=avvia_compressione)
 confirm_button.place(x=250,y=220,width=110,height=30)
+
+
+cancel_button = tk.Button(window, text="Annulla", command=annulla_compressione)
+cancel_button.place(x=370,y=220,width=110,height=30)
+
 
 # Crea il widget text per la stampa dei messaggi di stato
 output_message = tk.Text(window)

@@ -130,18 +130,12 @@ def avvia_compressione():
     
     avvia = True
 
-    #Verifica generale parametri di ingresso
-    try:
-        input_file = input_file_entry.get()
-        output_file = output_file_entry.get()
-        max_size = int(long_side_entry.get())
-        dpi = int(dpi_entry.get())
-        jpg_quality = (compressione_jpg.get())
-        color_bits = radio_var.get()
-        
-    except:
-        print_status('C\'è qualcosa che non va nei parametri di ingresso.')
-        avvia = False
+    input_file = input_file_entry.get()
+    output_file = output_file_entry.get()
+    max_size = (long_side_entry.get())
+    dpi = int(dpi_entry.get())
+    jpg_quality = (compressione_jpg.get())
+    color_bits = radio_var.get()
 
     #Verifica se il file di input esiste
     if not os.path.isfile(input_file):
@@ -153,8 +147,26 @@ def avvia_compressione():
         print_status("La directory di salvataggio del file cbz non sembra esistere!")
         avvia = False
 
+    if os.path.isfile(input_file) == os.path.isfile(output_file):
+        print_status("Il file di ingresso e di uscita non possono coincidere!")
+        avvia = False
+
+    #Verifica che il lato lungo dell'immagine sia stato inserito correttamente
+    if max_size and 400 <= int(max_size) <= 4000:
+        max_size=int(max_size)
+    else:
+        if not max_size:
+            print_status("Inserire la dimensione del lato lungo per le immagini")
+        else:
+            print_status("Il lato lungo dell'immagine deve essere compreso tra 400 e 4000 px")
+        avvia = False
+
+
     #Se è tutto ok avvia la compressione
-    if avvia : compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+    try:
+        if avvia : compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+    except:
+        print_status("SI E' VERIFICATO UN ERRORE DURANTE LA CONVERSIONE")
 
 #root.title("undefined")
 width=592

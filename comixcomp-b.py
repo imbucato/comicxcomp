@@ -29,8 +29,7 @@ def is_rar_file(filename):
 
 #FUNZIONE PRINCIPALE PER LA COMPRESSIONE DEI CBR/CBZ
 def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits):
-    print_status('Inizia compressione')
-
+    
     archive = None
     archive_type = None
 
@@ -39,14 +38,14 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
         archive = rarfile.RarFile
         archive_type = 'cbr'
         if input_file.lower().endswith('.cbr'):
-            print_status('Archivio di tipo RAR')
+            print_status('....Archivio di tipo RAR')
         else:
             print_status('Il file ha estenzione cbz ma è in realtà un cbr (archivio RAR)')        
     elif is_zip_file(input_file):
         archive = zipfile.ZipFile
         archive_type = 'cbz'
         if input_file.lower().endswith('.zip'):
-            print_status('Archivio di tipo ZIP')
+            print_status('....Archivio di tipo ZIP')
         else:
             print_status('Il file ha estenzione cbr ma è in realtà un cbz (archivio ZIP)')
     else:
@@ -55,12 +54,12 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
     
     with archive(input_file, 'r') as af:
         temp_dir = tempfile.mkdtemp()
-        print_status('Scompattazione archivio')
+        print_status('....Scompattazione archivio')
         af.extractall(temp_dir)
         pagina = 1
         new_temp_dir = tempfile.mkdtemp()
         for root, _, files in os.walk(temp_dir):
-            print_status('Modifica immagini')
+            print_status('....Modifica immagini')
             for file in files:
                 if file.lower().endswith(('.jpg', '.jpeg', '.png')):
                     image_path = os.path.join(root, file)
@@ -90,7 +89,7 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
                     
                     pagina += 1
         
-        print_status('Ricreazione archivio compresso')
+        print_status('....Ricreazione archivio compresso')
         with zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED) as out_zip:
             for root, _, files in os.walk(new_temp_dir):
                 for file in files:
@@ -99,7 +98,7 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
         shutil.rmtree(temp_dir)
         shutil.rmtree(new_temp_dir)
 
-        print_status('Fine compressione')
+        print_status('....Fine compressione')
 
 # Definisce una funzione per la selezione del file di input
 def select_input_file():
@@ -127,26 +126,59 @@ def print_status(message):
 
 # Definisce la funzione che avvia la compressione
 def avvia_compressione():
-     
+
+    avvia = True
+
     input_dir = input_file_entry.get()
     output_dir = output_file_entry.get()
-    max_size = int(long_side_entry.get())
+    max_size = long_side_entry.get()
     dpi = int(dpi_entry.get())
     jpg_quality = compressione_jpg.get()
     color_bits = radio_var.get()
 
-    print_status('*******INIZIO PROCESSO COMPRESSIONE BATCH*******')
+    #Verifica se il file di input esiste
+    if not os.path.isdir(input_dir):
+        print_status("La directory di INPUT non sembra esistere!")
+        avvia = False
 
-    for file in os.listdir(input_dir):
-        if file.endswith('.cbr') or file.endswith('.cbz'):
-            
-            input_file = os.path.join(input_dir, file)
-            nome_file_senza_estensione = os.path.splitext(os.path.basename(input_file))[0]
-            output_file = os.path.join(output_dir, nome_file_senza_estensione + '.cbz')
-            print_status('ELABORAZIONE ' + input_file)
-            compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+    #Verifica se la directory di output esiste
+    if not os.path.isdir(output_dir):
+        print_status("La directory di OUTPUT non sembra esistere!")
+        avvia = False
 
-    print_status('*******FINE PROCESSO COMPRESSIONE BATCH*******')  
+    if input_dir == output_dir:
+        print_status("Le directory di INPUT e di OUTPUT non possono coincidere!")
+        avvia = False
+
+    #Verifica che il lato lungo dell'immagine sia stato inserito correttamente
+    if max_size and 400 <= int(max_size) <= 4000:
+        max_size=int(max_size)
+    else:
+        if not max_size:
+            print_status("Inserire la dimensione del lato lungo per le immagini")
+        else:
+            print_status("Il lato lungo dell'immagine deve essere compreso tra 400 e 4000 px")
+        avvia = False
+
+    if avvia:
+
+        print_status('*******INIZIO PROCESSO COMPRESSIONE BATCH*******')
+
+        for file in os.listdir(input_dir):
+            if file.endswith('.cbr') or file.endswith('.cbz'):
+                
+                input_file = os.path.join(input_dir, file)
+                nome_file_senza_estensione = os.path.splitext(os.path.basename(input_file))[0]
+                output_file = os.path.join(output_dir, nome_file_senza_estensione + '.cbz')
+                print_status('\nELABORAZIONE ' + input_file)
+                
+                try:
+                    compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
+                except:
+                    print_status('Si è verficato un errore imprevisto durante la compressione')
+
+
+        print_status('*******FINE PROCESSO COMPRESSIONE BATCH*******')  
 
  
     
@@ -184,10 +216,19 @@ output_file_entry.place(x=10,y=100,width=487,height=30)
 output_file_button = tk.Button(window, text="Sfoglia", command=select_output_file)
 output_file_button.place(x=510,y=100,width=70,height=30)
 
+#Funzione di validazione del campo "long_side_entry": impedisce che vengano inserite lettere
+def validate_input(new_value):
+    if new_value.isnumeric() or new_value == "":
+        return True
+    else:
+        return False
+
+vcmd = (window.register(validate_input), '%P')
+
 # Crea i widget per l'inserimento dei parametri di compressione
 long_side_label = tk.Label(window, text="Dimensione lato lungo")
 long_side_label.place(x=0,y=140,width=151,height=30)
-long_side_entry = tk.Entry(window)
+long_side_entry = tk.Entry(window,validate="key", validatecommand=vcmd)
 long_side_entry["justify"] = "center"
 long_side_entry.place(x=30,y=170,width=92,height=30)
 
@@ -209,10 +250,6 @@ jpg_comp_entry = tk.Entry(window)
 compressione_jpg = tk.IntVar(value=85)
 jpg_comp_entry = tk.Scale(window, from_=1, to=100, orient=tk.HORIZONTAL, variable=compressione_jpg)
 jpg_comp_entry.place(x=260,y=160,width=120)
-
-#jpg_comp_entry = tk.Entry(window)
-#jpg_comp_entry["justify"] = "center"
-#jpg_comp_entry.place(x=280,y=170,width=70,height=30)
 
 # Crea i widget per la selezione delle radiobox colore/scala di grigi/bw
 GLabel_183=tk.Label(window)

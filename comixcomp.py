@@ -111,6 +111,7 @@ def compress_cb(input_file, output_file, max_size, dpi, jpg_quality, color_bits)
                 if file.lower().endswith(('.jpg', '.jpeg', '.png')):
                     image_path = os.path.join(root, file)
                     lista_file.append(image_path)
+        
         #Avvio del multiprocessing per la conversione delle immagini           
         with Pool() as pool:
             pool.starmap(elabora_immagine, [(max_size, dpi, jpg_quality, color_bits, new_temp_dir, len(lista_file)+1, i, file,) for i, file in enumerate(lista_file)])            

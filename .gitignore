@@ -12,3 +12,4 @@ test/compressione.py
 test/gui.py
 test/test-multip.py
 test/test-multiprocessing.py
+test/comixcomp-b.py

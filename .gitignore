@@ -6,3 +6,9 @@ build/UnRAR/UnRAR.exe.manifest
 build_comixcomp-b.bat
 build/comixcomp-b.exe
 build/UnRAR.exe
+test/comixcomp_originale.py
+test/comixcomp-alt.py
+test/compressione.py
+test/gui.py
+test/test-multip.py
+test/test-multiprocessing.py

@@ -8,6 +8,7 @@ import rarfile
 import zipfile
 import tempfile
 import shutil
+import multiprocessing
 from multiprocessing import Pool
 
 #Definisco il percorso dell'eseguibile unrar.exe indispensabile per il funziomanento del modulo python 'rarfile'
@@ -217,6 +218,7 @@ def avvia_compressione():
         print_status(f'Elaborazione durata {durata} secondi')  
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     #Dimensioni della finestra
     width=592
     height=624

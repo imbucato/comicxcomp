@@ -8,6 +8,7 @@ import rarfile
 import zipfile
 import tempfile
 import shutil
+import multiprocessing
 from multiprocessing import Pool
 
 #Definisco il percorso dell'eseguibile unrar.exe indispensabile per il funziomanento del modulo python 'rarfile'

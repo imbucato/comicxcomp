@@ -1,0 +1,1 @@
+pyinstaller --distpath ./build --onefile --icon=ico-batch.ico --add-data "UnRAR.exe" --noconsole .\comixcomp-b.py

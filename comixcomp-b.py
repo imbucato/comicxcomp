@@ -218,7 +218,11 @@ def avvia_compressione():
         print_status(f'Elaborazione durata {durata} secondi')  
 
 if __name__ == '__main__':
-    multiprocessing.freeze_support()
+    # chiamare freeze_support() solo sotto Windows e solo
+    # quando si utilizza un ambiente congelato
+    if sys.platform.startswith('win') and getattr(sys, 'frozen', False):
+        multiprocessing.freeze_support()
+    
     #Dimensioni della finestra
     width=592
     height=624

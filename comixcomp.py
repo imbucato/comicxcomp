@@ -200,7 +200,11 @@ def avvia_compressione():
 #(Processo principale all'interno del quale avviene il multiprocessing)
 
 if __name__ == '__main__':
-
+    # chiamare freeze_support() solo sotto Windows e solo
+    # quando si utilizza un ambiente congelato
+    if sys.platform.startswith('win') and getattr(sys, 'frozen', False):
+        multiprocessing.freeze_support()
+        
     #Dimensioni della finestra
     width=592
     height=424

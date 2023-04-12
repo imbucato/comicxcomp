@@ -284,7 +284,7 @@ def messaggio_info():
     email = "roby1976@gmail.com"
     website = "https://github.com/imbucato/comixcomp"
 
-    messagebox.showinfo("Informazioni", f"Per info: {email}\nRepository: {website}")
+    messagebox.showinfo("Informazioni", f"Info: {email}\nRepository: {website}")
 
 if __name__ == '__main__':
     # chiamare freeze_support() solo sotto Windows e solo

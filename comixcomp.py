@@ -256,12 +256,12 @@ def apri_finestra_istruzioni():
 
     r7=tk.Label(w_help)
     r7["justify"] = "left"
-    r7["text"] = "5) Seleziona la qualità delle immagini. 100 corrisponde alla qualità massima. Corrisponde \nalla minima compressione per i JPEG e al livello di compressione 0 per il formato PNG. \nPer fumetti a colori si consiglia di usare valori non superiori a 85 mentre per fumetti b/n \nsi ottengono ottimi risultati già con valori pari a 40-50"
+    r7["text"] = "5) Seleziona la qualità delle immagini. 100 corrisponde alla qualità massima. Corrisponde \nalla minima compressione per i JPEG e al livello di compressione 0 per il formato PNG. \nPer fumetti a colori si consiglia di usare valori non superiori a 85 mentre per fumetti b/n \nsi ottengono ottimi risultati già con valori pari a 40-50."
     r7.place(x=20,y=290, width=570)
 
     r8=tk.Label(w_help)
     r8["justify"] = "left"
-    r8["text"] = "7) Selezionare i DPI dell'immagine. Buoni risultati si hanno già per valori pari a 150"
+    r8["text"] = "6) Selezionare i DPI dell'immagine. Buoni risultati si hanno già per valori pari a 150."
     r8.place(x=20,y=370, width=570)
 
 def chiudi_finestra_istruzioni():

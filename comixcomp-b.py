@@ -234,7 +234,7 @@ def apri_finestra_istruzioni():
 
     r1=tk.Label(w_help)
     r1["justify"] = "left"
-    r1["text"] = "Questo tool serve a comprimere i file cbr/cbz. Il software salva il file originale nel formato \ncbz (compressione zip indipendentemente dal formato del file di origine)."
+    r1["text"] = "Questo tool serve a comprimere in serie file cbr/cbz. Il software salva i file originali nel \nformato cbz (compressione zip indipendentemente dal formato del file di origine)."
     r1.place(x=10,y=10, width=570)
 
     r2=tk.Label(w_help)
@@ -244,12 +244,12 @@ def apri_finestra_istruzioni():
 
     r3=tk.Label(w_help)
     r3["justify"] = "left"
-    r3["text"] = "1) Selezionare il file cbr/cbz da comprimere."
+    r3["text"] = "1) Selezionare la cartella di origine dei file cbr/cbz."
     r3.place(x=20,y=90, width=570)
 
     r4=tk.Label(w_help)
     r4["justify"] = "left"
-    r4["text"] = "2) Selezionare la cartella e il nome del file di output compresso."
+    r4["text"] = "2) Selezionare la cartella dove salvare i file compressi."
     r4.place(x=20,y=120, width=570)
 
     r5=tk.Label(w_help)
@@ -264,12 +264,12 @@ def apri_finestra_istruzioni():
 
     r7=tk.Label(w_help)
     r7["justify"] = "left"
-    r7["text"] = "5) Seleziona la qualità delle immagini. 100 corrisponde alla qualità massima. Corrisponde \nalla minima compressione per i JPEG e al livello di compressione 0 per il formato PNG. \nPer fumetti a colori si consiglia di usare valori non superiori a 85 mentre per fumetti b/n \nsi ottengono ottimi risultati già con valori pari a 40-50"
+    r7["text"] = "5) Seleziona la qualità delle immagini. 100 corrisponde alla qualità massima. Corrisponde \nalla minima compressione per i JPEG e al livello di compressione 0 per il formato PNG. \nPer fumetti a colori si consiglia di usare valori non superiori a 85 mentre per fumetti b/n \nsi ottengono ottimi risultati già con valori pari a 40-50."
     r7.place(x=20,y=290, width=570)
 
     r8=tk.Label(w_help)
     r8["justify"] = "left"
-    r8["text"] = "7) Selezionare i DPI dell'immagine. Buoni risultati si hanno già per valori pari a 150"
+    r8["text"] = "6) Selezionare i DPI dell'immagine. Buoni risultati si hanno già per valori pari a 150."
     r8.place(x=20,y=370, width=570)
 
 # Definisci la funzione che verrà eseguita quando si seleziona "File -> Esci"

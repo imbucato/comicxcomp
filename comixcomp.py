@@ -11,6 +11,8 @@ import shutil
 import multiprocessing
 from multiprocessing import Pool
 
+#Modifica
+
 #Definisco il percorso dell'eseguibile unrar.exe indispensabile per il funziomanento del modulo python 'rarfile'
 rarfile.UNRAR_TOOL = r'UnRAR.exe'
 

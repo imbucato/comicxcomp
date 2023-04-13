@@ -213,8 +213,8 @@ def validate_input(new_value):
 
 #COSTRUZIONE FINESTRA ISTRUZIONI
 def apri_finestra_istruzioni():
-    width_help=592
-    height_help=424
+    width_help=590
+    height_help=440
 
     #Definisco la finestra w_help come variabile globale
     global w_help
@@ -224,45 +224,18 @@ def apri_finestra_istruzioni():
     w_help.geometry('%dx%d' % (width_help, height_help))
     w_help.resizable(width=False, height=False)
 
-    r1=tk.Label(w_help)
-    r1["justify"] = "left"
-    r1["text"] = "Questo tool serve a comprimere i file cbr/cbz. Il software salva il file originale nel formato \ncbz (compressione zip indipendentemente dal formato del file di origine)."
-    r1.place(x=10,y=10, width=570)
-
-    r2=tk.Label(w_help)
-    r2["justify"] = "left"
-    r2["text"] = "ISTRUZIONI"
-    r2.place(x=20,y=60, width=570)
-
-    r3=tk.Label(w_help)
-    r3["justify"] = "left"
-    r3["text"] = "1) Selezionare il file cbr/cbz da comprimere."
-    r3.place(x=20,y=90, width=570)
-
-    r4=tk.Label(w_help)
-    r4["justify"] = "left"
-    r4["text"] = "2) Selezionare la cartella e il nome del file di output compresso."
-    r4.place(x=20,y=120, width=570)
-
-    r5=tk.Label(w_help)
-    r5["justify"] = "left"
-    r5["text"] = "3) Indicare il lato lungo delle immagini. Scegliere un valore compreso tra 600 e 4000 px. \nSe il fumetto originale ha pagine il cui lato lungo è maggiore di tale valore queste \nverranno ridimensionate."
-    r5.place(x=20,y=150, width=570)
-
-    r6=tk.Label(w_help)
-    r6["justify"] = "left"
-    r6["text"] = "4) Selezionare il tipo di fumetto in entrata. Se il fumetto è in bianco e nero verranno \nmantenute a colori solo le prime due pagine e le ultime due.\nLe altre pagine verranno convertite in 8 tonalità di grigio e verrà utilizzato il formato PNG\nper il salvataggio delle immagini."
-    r6.place(x=20,y=210, width=570)
-
-    r7=tk.Label(w_help)
-    r7["justify"] = "left"
-    r7["text"] = "5) Seleziona la qualità delle immagini. 100 corrisponde alla qualità massima. Corrisponde \nalla minima compressione per i JPEG e al livello di compressione 0 per il formato PNG. \nPer fumetti a colori si consiglia di usare valori non superiori a 85 mentre per fumetti b/n \nsi ottengono ottimi risultati già con valori pari a 40-50."
-    r7.place(x=20,y=290, width=570)
-
-    r8=tk.Label(w_help)
-    r8["justify"] = "left"
-    r8["text"] = "6) Selezionare i DPI dell'immagine. Buoni risultati si hanno già per valori pari a 150."
-    r8.place(x=20,y=370, width=570)
+    output_message = tk.Text(w_help,wrap="word")
+    output_message.place(x=30,y=10,width=530,height=420)
+    output_message.insert(tk.END, "Questo tool serve a comprimere i file cbr/cbz. Il software salva il file originale nel formato cbz (compressione zip) indipendentemente dal formato del file di origine.\n")
+    output_message.insert(tk.END, "\nISTRUZIONI\n")
+    output_message.insert(tk.END, "\n1) Selezionare il file cbr/cbz da comprimere.\n")
+    output_message.insert(tk.END, "\n2) Selezionare la cartella e il nome del file di output compresso.\n")
+    output_message.insert(tk.END, "\n3) Indicare il lato lungo delle immagini. Scegliere un valore compreso tra 600 e 4000 px. Se il fumetto originale ha pagine il cui lato lungo è maggiore di tale valore queste verranno ridimensionate.\n")
+    output_message.insert(tk.END, "\n4) Selezionare il tipo di fumetto in entrata. Se il fumetto è in bianco e nero verranno \nmantenute a colori solo le prime due pagine e le ultime due. Le altre pagine verranno convertite in 8 tonalità di grigio e verrà utilizzato il formato PNG per il salvataggio delle immagini.\n")
+    output_message.insert(tk.END, "\n5) Seleziona la qualità delle immagini. 100 corrisponde alla qualità massima. Corrisponde alla minima compressione per i JPEG e al livello di compressione 0 per il formato PNG. Per fumetti a colori si consiglia di usare valori non superiori a 85 mentre per fumetti b/n si ottengono ottimi risultati già con valori pari a 40-50.\n")
+    output_message.insert(tk.END, "\n6) Selezionare i DPI dell'immagine. Buoni risultati si hanno già per valori pari a 150.\n")
+    output_message.see(tk.END)
+    output_message.update() 
 
 def chiudi_finestra_istruzioni():
     if 'w_help' in globals():

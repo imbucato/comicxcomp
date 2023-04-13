@@ -7,4 +7,5 @@ test/test-multiprocessing.py
 test/comixcomp-b.py
 test/test.py
 test/test2.py
+test_mac/*
 .DS_Store

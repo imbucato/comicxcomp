@@ -291,7 +291,7 @@ if __name__ == '__main__':
 
     #setting window size
     window = tk.Tk()
-    window.iconbitmap('ico.ico')
+    if not os.path.isfile('ico.ico'): window.iconbitmap('ico.ico')
     window.title("Comrpimi un file cbr/cbz")
     window.geometry('%dx%d' % (width, height))
     window.resizable(width=False, height=False)

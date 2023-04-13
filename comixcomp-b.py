@@ -297,7 +297,7 @@ if __name__ == '__main__':
 
     #setting window size
     window = tk.Tk()
-    window.iconbitmap('ico-batch.ico')
+    if not os.path.isfile('ico-batch.ico'): window.iconbitmap('ico-batch.ico')
     window.title("Comrpimi file cbr/cbz in serie")
     window.geometry('%dx%d' % (width, height))
     window.resizable(width=False, height=False)

@@ -214,7 +214,7 @@ def validate_input(new_value):
 #COSTRUZIONE FINESTRA ISTRUZIONI
 def apri_finestra_istruzioni():
     width_help=590
-    height_help=440
+    height_help=540
 
     #Definisco la finestra w_help come variabile globale
     global w_help
@@ -225,7 +225,7 @@ def apri_finestra_istruzioni():
     w_help.resizable(width=False, height=False)
 
     output_message = tk.Text(w_help,wrap="word")
-    output_message.place(x=30,y=10,width=530,height=420)
+    output_message.place(x=30,y=10,width=530,height=520)
     output_message.insert(tk.END, "Questo tool serve a comprimere i file cbr/cbz. Il software salva il file originale nel formato cbz (compressione zip) indipendentemente dal formato del file di origine.\n")
     output_message.insert(tk.END, "\nISTRUZIONI\n")
     output_message.insert(tk.END, "\n1) Selezionare il file cbr/cbz da comprimere.\n")
